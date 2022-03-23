@@ -40,6 +40,7 @@ end)
 
 menu2:On('open', function(m)
   m:ClearItems()
+  local veh = GetVehiclePedIsIn(PlayerPedId(), false)
   local availableExtras = {}
   local items = {}
   local extrasExist = false
