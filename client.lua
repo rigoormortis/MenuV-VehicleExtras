@@ -20,7 +20,7 @@ menu:On('open', function(m)
   local veh = GetVehiclePedIsIn(PlayerPedId(), false)
   local liveryCount = GetVehicleLiveryCount(veh)
 
-  if liveryCount > 0 then
+  if liveryCount > 1 then
     local liveryItems = {}
     local s = 1
     
@@ -30,7 +30,7 @@ menu:On('open', function(m)
 
     local liveries = menu:AddRange({
       label = 'Livery',
-      min = 0,
+      min = 1,
       max = GetVehicleLiveryCount(veh),
       value = GetVehicleLivery(veh),
       saveOnUpdate = true
@@ -39,7 +39,7 @@ menu:On('open', function(m)
     liveries:On('change', function(item , newValue, oldValue)
       SetVehicleLivery(veh, newValue)
     end)
-  elseif liveryCount == 0 then
+  elseif liveryCount == 1 then
     local liveries = menu:AddButton({
       label = 'No available liveries for vehicle.',
       disabled = true
