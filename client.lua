@@ -1,6 +1,4 @@
 local menuLocation = 'topright'
-local veh = GetVehiclePedIsIn(PlayerPedId(), false)
-local liveryCount = GetVehicleLiveryCount(veh)
 
 local menu = MenuV:CreateMenu(false, 'Vehicle Customization', menuLocation, 0, 0, 0, "size-100", 'none', 'menuv', 'veh_customization', 'native')
 local menu2 = MenuV:CreateMenu(false, 'Extras Customization', menuLocation, 0, 0, 0, "size-100", 'none', 'menuv', 'extra_customization', 'native')
@@ -10,37 +8,49 @@ RegisterNetEvent('openVehMenu', function()
   MenuV:OpenMenu(menu)
 end)
 
-local menu_button = menu:AddButton({
-  label = 'Extras',
-  value = menu2,
-  description = 'Change the extras on your vehicle.'
-})
+menu:On('open', function(m)
+  m:ClearItems(m)
 
-  
-if liveryCount > 0 then
-  local liveryItems = {}
-  local s = 1
-  
-  for i = 1, liveryCount do
-    table.insert(liveryItems, s, i)
+  local menu_button = menu:AddButton({
+    label = 'Extras',
+    value = menu2,
+    description = 'Change the extras on your vehicle.'
+  })
+
+  local veh = GetVehiclePedIsIn(PlayerPedId(), false)
+  local liveryCount = GetVehicleLiveryCount(veh)
+
+  if liveryCount > 0 then
+    local liveryItems = {}
+    local s = 1
+    
+    for i = 1, liveryCount do
+      table.insert(liveryItems, s, i)
+    end
+
+    local liveries = menu:AddRange({
+      label = 'Livery',
+      min = 0,
+      max = GetVehicleLiveryCount(veh),
+      value = 0,
+      saveOnUpdate = true
+    })
+    
+    liveries:On('change', function(item , newValue, oldValue)
+      SetVehicleLivery(veh, newValue)
+    end)
+  elseif liveryCount == 0 then
+    local liveries = menu:AddButton({
+      label = 'No available liveries for vehicle.',
+      disabled = true
+    })
   end
-end
-
-local liveries = menu:AddRange({
-  label = 'Livery',
-  min = 0,
-  max = liveryCount,
-  value = 0,
-  saveOnUpdate = true
-})
-
-liveries:On('change', function(item , newValue, oldValue)
-  SetVehicleLivery(veh, newValue)
 end)
-
+  
 menu2:On('open', function(m)
   m:ClearItems()
   local veh = GetVehiclePedIsIn(PlayerPedId(), false)
+  local fuel = GetVehicleFuelLevel(veh)
   local availableExtras = {}
   local items = {}
   local extrasExist = false
