@@ -32,7 +32,7 @@ menu:On('open', function(m)
       label = 'Livery',
       min = 0,
       max = GetVehicleLiveryCount(veh),
-      value = 0,
+      value = GetVehicleLivery(veh),
       saveOnUpdate = true
     })
     
